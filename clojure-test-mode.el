@@ -225,8 +225,12 @@ Retuns the problem overlay if such a position is found, otherwise nil."
 (defun clojure-test-implementation-for (namespace)
   (let* ((namespace (clojure-underscores-for-hyphens namespace))
          (segments (split-string namespace "\\."))
-         (before (subseq segments 0 clojure-test-ns-segment-position))
-         (after (subseq segments (1+ clojure-test-ns-segment-position)))
+         (before (subseq segments 0 (if (<= 0 clojure-test-ns-segment-position)
+                                        clojure-test-ns-segment-position
+                                        (1- clojure-test-ns-segment-position))))
+         (after (subseq segments (if (<= 0 clojure-test-ns-segment-position)
+                                     (1+ clojure-test-ns-segment-position)
+                                     clojure-test-ns-segment-position)))
          (impl-segments (append before after)))
     (mapconcat 'identity impl-segments "/")))
 
